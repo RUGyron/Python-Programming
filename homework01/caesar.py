@@ -3,8 +3,11 @@ def encrypt_caesar(plaintext, shift):
     """
     >>> encrypt_caesar("PYTHON")
     'SBWKRQ'
-    
-    """
+    >>> encrypt_caesar("python")
+    'sbwkrq'
+    >>> encrypt_caesar("")
+    ''
+    """    
     
     ciphertext = ""
     for i in plaintext:
@@ -23,6 +26,16 @@ def encrypt_caesar(plaintext, shift):
     return ciphertext
 
 def decrypt_caesar(chipertext, shift):
+    
+    """    
+    >>> decrypt_caesar("SBWKRQ")
+    'PYTHON'
+    >>> decrypt_caesar("sbwkrq")
+    'python'
+    >>> decrypt_caesar("")
+    ''
+    """    
+    
     plaintext = ""
     for i in chipertext:
         if 96 < ord(i) < 123:

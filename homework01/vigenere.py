@@ -60,4 +60,3 @@ def decrypt_vigenere(ciphertext, keyword):
                 plaintext = plaintext + chr(ord(i) - ord(keyword[k]) + 97)
         k = k + 1
     return plaintext
- 

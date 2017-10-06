@@ -1,4 +1,4 @@
-#Pivosh Vladislav Dmitrievich
-*K3140
-*CS102
-*Python Programming
+# Pivosh Vladislav Dmitrievich
+* K3140
+* CS102
+* Python Programming

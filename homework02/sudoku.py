@@ -70,13 +70,8 @@ def get_block(values, pos):
 
     row, col = pos[0] // 3 * 3, pos[1] // 3 * 3
     val_n = [values[row + elem][col: col + 3] for elem in range(3)]
-    #val_nn = [j for j in i for i in val_n if j != '.']
-    val_nn = []
-    for i in val_n:
-        for j in i:
-            if j == '.':
-                continue
-            val_nn.append(j)
+    val_nn = [val_n[i][j] for i in range(3) for j in range(3)
+              if val_n[j] != '.']
     return val_nn
 
 
@@ -92,10 +87,10 @@ def find_empty_positions(grid):
     ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    for i in grid:
-        for j in i:
-            if j == '.':
-                return (grid.index(i), i.index(j))
+    for i in range(len(grid)):
+        for j in range(len(grid)):
+            if grid[i][j] == '.':
+                return (i, j)
     return -1
 
 

@@ -30,14 +30,8 @@ def group(values, n):
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    k = 0
-    values_copy = []
-    lenth = len(values)
-    groups = lenth // n
-    for i in range(n):
-        values_copy.append(values[k:groups+k])
-        k = k + groups
-    return values_copy
+    return [values[i * len(values) // n: i * len(values) // n +
+                   len(values) // n] for i in range(n)]
 
 
 def get_row(values, pos):
@@ -49,8 +43,7 @@ def get_row(values, pos):
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    row = values[pos[0]]
-    return row
+    return values[pos[0]]
 
 
 def get_col(values, pos):
@@ -62,9 +55,7 @@ def get_col(values, pos):
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    col = []
-    col = [values[i][pos[1]] for i in range(9)]
-    return col
+    return [values[i][pos[1]] for i in range(len(values))]
 
 
 def get_block(values, pos):
@@ -78,8 +69,8 @@ def get_block(values, pos):
     если эл-ты не сгруппированы) """
 
     row, col = pos[0] // 3 * 3, pos[1] // 3 * 3
-    val_n = []
     val_n = [values[row + elem][col: col + 3] for elem in range(3)]
+    #val_nn = [j for j in i for i in val_n if j != '.']
     val_nn = []
     for i in val_n:
         for j in i:
@@ -110,10 +101,7 @@ def find_empty_positions(grid):
 
 def find_possible_values(grid, pos):
     """ Вернуть все возможные значения для указанной позиции """
-    var = '123456789'
-    var = set(var)
-    row = set()
-    col = set()
+    var = set('123456789')
     row = set(get_row(grid, pos))
     col = set(get_col(grid, pos))
     union = set.union(row, col)
@@ -151,14 +139,17 @@ def solve(grid):
 def check_solution(solution):
     """ Если решение solution верно, то вернуть True,
     в противном случае False """
+    copy = [[int(j) for j in i] for i in solution]
     summ = 0
-    for i in range(9):
-        for j in range(9):
-            if solution[i][j] == '.':
+    for y in range(3):
+        for x in range(3):
+            if sum(get_block(copy, (y, x))) != 45:
                 return False
-            summ += int(solution[i][j])
-    if summ != 405:
-        return False
+    for i in range(9):
+        if sum(copy[i]) != 45:
+            return False
+        if sum(copy[i]) != 45:
+            return False
     return True
 
 

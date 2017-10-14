@@ -30,8 +30,7 @@ def group(values, n):
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    return [values[i * len(values) // n: i * len(values) // n +
-                   len(values) // n] for i in range(n)]
+    return [values[i * n: i * n + n] for i in range(n)]
 
 
 def get_row(values, pos):
@@ -67,12 +66,9 @@ def get_block(values, pos):
     """ --------------------- """
     """ цикл для группировки эл-ов по 3 внутри сетки (при условии,
     если эл-ты не сгруппированы) """
-
-    row, col = pos[0] // 3 * 3, pos[1] // 3 * 3
-    val_n = [values[row + elem][col: col + 3] for elem in range(3)]
-    val_nn = [val_n[i][j] for i in range(3) for j in range(3)
-              if val_n[j] != '.']
-    return val_nn
+    r = 3 * (pos[0] // 3)
+    c = 3 * (pos[1] // 3)
+    return [values[r+i][c+j] for i in range(3) for j in range(3)]
 
 
 def find_empty_positions(grid):
@@ -99,11 +95,8 @@ def find_possible_values(grid, pos):
     var = set('123456789')
     row = set(get_row(grid, pos))
     col = set(get_col(grid, pos))
-    union = set.union(row, col)
     values_in_block = set(get_block(grid, pos))
-    union = set.union(union, values_in_block)
-    res = var - union
-    return res
+    return var - set.union(values_in_block, set.union(row, col))
 
 
 def solve(grid):
@@ -134,17 +127,22 @@ def solve(grid):
 def check_solution(solution):
     """ Если решение solution верно, то вернуть True,
     в противном случае False """
-    copy = [[int(j) for j in i] for i in solution]
-    summ = 0
-    for y in range(3):
-        for x in range(3):
-            if sum(get_block(copy, (y, x))) != 45:
-                return False
     for i in range(9):
-        if sum(copy[i]) != 45:
+        var1 = set('123456789')
+        var2 = set('123456789')
+        var3 = set('123456789')
+        row = set(get_row(solution, (i, 0)))
+        col = set(get_col(solution, (0, i)))
+        var1 -= row
+        var2 -= col
+        if var1 and var2 != set():
             return False
-        if sum(copy[i]) != 45:
-            return False
+    for i in range(3):
+        for j in range(3):
+            block = set(get_block(solution, (i, j)))
+            var3 -= block
+            if var3 != set():
+                return False
     return True
 
 
@@ -168,7 +166,7 @@ def generate_sudoku(N):
         >>> solution = solve(grid)
         >>> check_solution(solution)
         True
-        """
+    """
     N = 81 - N
     grid = [['.' for i in range(9)] for j in range(9)]
     grid = solve(grid)

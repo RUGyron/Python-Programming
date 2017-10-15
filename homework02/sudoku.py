@@ -113,8 +113,8 @@ def solve(grid):
     if pos == -1:
         return grid
     values = find_possible_values(grid, pos)
-    if values == {}:
-        return False
+    if not values:
+        return None
     for i in values:
         grid[pos[0]][pos[1]] = i
         ans = solve(grid)

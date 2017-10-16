@@ -1,5 +1,5 @@
-from pprint import pprint as pp
 import random
+from pprint import pprint as pp
 from collections import Counter
 
 
@@ -92,11 +92,7 @@ def find_empty_positions(grid):
 
 def find_possible_values(grid, pos):
     """ Вернуть все возможные значения для указанной позиции """
-    var = set('123456789')
-    row = set(get_row(grid, pos))
-    col = set(get_col(grid, pos))
-    values_in_block = set(get_block(grid, pos))
-    return var - set.union(values_in_block, set.union(row, col))
+    return set('123456789') -set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))    
 
 
 def solve(grid):
@@ -128,20 +124,20 @@ def check_solution(solution):
     """ Если решение solution верно, то вернуть True,
     в противном случае False """
     for i in range(9):
-        var1 = set('123456789')
-        var2 = set('123456789')
-        var3 = set('123456789')
-        row = set(get_row(solution, (i, 0)))
-        col = set(get_col(solution, (0, i)))
-        var1 -= row
-        var2 -= col
-        if var1 and var2 != set():
+        row_values = set('123456789')
+        col_values = set('123456789')
+        block_values = set('123456789')
+        row_solution_values = set(get_row(solution, (i, 0)))
+        col_solution_values = set(get_col(solution, (0, i)))
+        row_values -= row_solution_values
+        col_values -= col_solution_values
+        if row_values != set() and col_values != set():
             return False
     for i in range(3):
         for j in range(3):
-            block = set(get_block(solution, (i, j)))
-            var3 -= block
-            if var3 != set():
+            block_solution_values = set(get_block(solution, (i, j)))
+            block_values -= block_solution_values
+            if block_values != set():
                 return False
     return True
 

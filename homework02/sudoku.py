@@ -92,7 +92,7 @@ def find_empty_positions(grid):
 
 def find_possible_values(grid, pos):
     """ Вернуть все возможные значения для указанной позиции """
-    return set('123456789') -set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))    
+    return set('123456789') - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))    
 
 
 def solve(grid):
@@ -131,7 +131,7 @@ def check_solution(solution):
         col_solution_values = set(get_col(solution, (0, i)))
         row_values -= row_solution_values
         col_values -= col_solution_values
-        if row_values != set() and col_values != set():
+        if row_values or col_values:
             return False
     for i in range(3):
         for j in range(3):

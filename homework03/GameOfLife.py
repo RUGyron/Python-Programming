@@ -11,16 +11,16 @@ class GameOfLife:
         self.height = height
         self.cell_size = cell_size
 
-        # Устанавливаем размер окна
+        # Г“Г±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГ¬ Г°Г Г§Г¬ГҐГ° Г®ГЄГ­Г 
         self.screen_size = width, height
-        # Создание нового окна
+        # Г‘Г®Г§Г¤Г Г­ГЁГҐ Г­Г®ГўГ®ГЈГ® Г®ГЄГ­Г 
         self.screen = pygame.display.set_mode(self.screen_size)
 
-        # Вычисляем количество ячеек по вертикали и горизонтали
+        # Г‚Г»Г·ГЁГ±Г«ГїГҐГ¬ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГїГ·ГҐГҐГЄ ГЇГ® ГўГҐГ°ГІГЁГЄГ Г«ГЁ ГЁ ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«ГЁ
         self.cell_width = self.width // self.cell_size
         self.cell_height = self.height // self.cell_size
 
-        # Скорость протекания игры
+        # Г‘ГЄГ®Г°Г®Г±ГІГј ГЇГ°Г®ГІГҐГЄГ Г­ГЁГї ГЁГЈГ°Г»
         self.speed = speed
 
     def draw_grid(self):
@@ -93,7 +93,7 @@ class GameOfLife:
                 else:
                     if summ == 3:
                         new_cell_list[i][j] = 1
-        self.clist = new_cell_list
+        self.clist = new_cell_list 
         return self.clist      
           
         

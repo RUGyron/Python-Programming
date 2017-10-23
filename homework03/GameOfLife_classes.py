@@ -61,16 +61,16 @@ class GameOfLife:
         self.height = height
         self.cell_size = cell_size
 
-        # Устанавливаем размер окна
+        # РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂ РѕРєРЅР°
         self.screen_size = width, height
-        # Создание нового окна
+        # РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РѕРєРЅР°
         self.screen = pygame.display.set_mode(self.screen_size)
 
-        # Вычисляем количество ячеек по вертикали и горизонтали
+        # Р’С‹С‡РёСЃР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЏС‡РµРµРє РїРѕ РІРµСЂС‚РёРєР°Р»Рё Рё РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё
         self.cell_width = self.width // self.cell_size
         self.cell_height = self.height // self.cell_size
 
-        # Скорость протекания игры
+        # РЎРєРѕСЂРѕСЃС‚СЊ РїСЂРѕС‚РµРєР°РЅРёСЏ РёРіСЂС‹
         self.speed = speed
 
     def draw_grid(self):

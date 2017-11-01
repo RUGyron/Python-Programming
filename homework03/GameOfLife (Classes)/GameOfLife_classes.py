@@ -56,7 +56,7 @@ class CellList:
     
     @classmethod
 
-    def from_file(self, filename):
+    def __from_file__(self, filename):
         with open(filename) as f:
             self.clist = json.load(f)
         return self.clist

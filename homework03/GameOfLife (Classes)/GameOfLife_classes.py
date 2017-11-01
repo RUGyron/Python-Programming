@@ -53,7 +53,35 @@ class CellList:
                         new_cell_list[i][j] = 1
         clist = new_cell_list
         return clist
+    
+    @classmethod
 
+    def from_file(self, filename):
+        with open(filename) as f:
+            self.clist = json.load(f)
+        return self.clist
+
+    def __iter__(self):
+        self.row_num = 0
+        self.col_num = 0
+        return self
+
+    def __next__(self):
+        cell = self.clist[self.row_num][self.col_num]
+        self.col_num += 1
+        if self.col_num == self.ncols:
+            self.col_num = 0
+            self.row_num += 1
+        return cell
+
+    def __str__(self):
+        string = ''
+        for i in self.nrows:
+            for j in self.ncols:
+                string += Cell(i, j).state
+                if len(string) == self.ncols:
+                    string += '\n'
+        return string
 
 class GameOfLife:
     def __init__(self, width=1280, height=720, cell_size=10, speed=10):

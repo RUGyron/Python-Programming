@@ -53,26 +53,6 @@ class CellList:
                         new_cell_list[i][j] = 1
         clist = new_cell_list
         return clist
-    
-    @classmethod
-
-    def __from_file__(self, filename):
-        with open(filename) as f:
-            self.clist = json.load(f)
-        return self.clist
-
-    def __iter__(self):
-        self.row_num = 0
-        self.col_num = 0
-        return self
-
-    def __next__(self):
-        cell = self.clist[self.row_num][self.col_num]
-        self.col_num += 1
-        if self.col_num == self.ncols:
-            self.col_num = 0
-            self.row_num += 1
-        return cell
 
     def __str__(self):
         string = ''
@@ -128,10 +108,6 @@ class GameOfLife:
             clock.tick(self.speed) #Breakpoints of a time
             
         pygame.quit()
-
-    def cell_list(self, randomize=True):
-        self.clist = CellList(self.cell_height, self.cell_width).cell_list(randomize)
-        return self.clist
 
     def draw_cell_list(self, rects):
         a = self.cell_size

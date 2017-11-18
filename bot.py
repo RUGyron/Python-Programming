@@ -1,7 +1,6 @@
 import config
 import telebot
 import requests
-import config
 from bs4 import BeautifulSoup
 
 bot = telebot.TeleBot(config.token)
@@ -26,24 +25,22 @@ def get_page(week=''):
 
 def get_schedule(web_page, day):
     soup = BeautifulSoup(web_page, "html5lib")
-    if day is list:
+    if type(day) == list:
         day = day[0]
     # Получаем таблицу с расписанием на день недели
     schedule_table = soup.find("table", attrs={"id": "1day"})
-    if day == '/понедельник':
+    if day == '/понедельник' or day == '/воскресенье' or day == '/Понедельник' or day == '/Воскресенье':
         schedule_table = soup.find("table", attrs={"id": "1day"})
-    elif day == '/вторник':
+    elif day == '/вторник' or day == '/Вторник':
         schedule_table = soup.find("table", attrs={"id": "2day"})
-    elif day == '/среда':
+    elif day == '/среда' or day == '/Среда':
         schedule_table = soup.find("table", attrs={"id": "3day"})
-    elif day == '/четверг':
+    elif day == '/четверг' or day == '/Четверг':
         schedule_table = soup.find("table", attrs={"id": "4day"})
-    elif day == '/пятница':
+    elif day == '/пятница' or day == '/Пятница':
         schedule_table = soup.find("table", attrs={"id": "5day"})
-    elif day == '/суббота':
+    elif day == '/суббота' or day == '/Суббота':
         schedule_table = soup.find("table", attrs={"id": "6day"})
-    elif day == '/воскресенье':
-        schedule_table = soup.find("table", attrs={"id": "1day"})
     # Время проведения занятий
     times_list = schedule_table.find_all("td", attrs={"class": "time"})
     times_list = [time.span.text for time in times_list]
@@ -59,12 +56,11 @@ def get_schedule(web_page, day):
     return times_list, locations_list, lessons_list
 
 
-@bot.message_handler(commands=['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'])
+@bot.message_handler(commands=['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье',
+                               'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресеьне'])
 def get_day(message):
     if len(message.text.split()) == 2:
         day, week = message.text.split()
-        print(day)
-        print(week)
         web_page = get_page(week)
     else:
         day = message.text.split()

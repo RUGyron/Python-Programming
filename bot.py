@@ -6,10 +6,13 @@ from bs4 import BeautifulSoup
 bot = telebot.TeleBot(config.token)
 
 """
+
 @bot.message_handler(content_types=["text"])
 def repeater(message):  # Название функции не играет никакой роли, в принципе
-    bot.send_message(message.chat.id, message.text)
+     bot.send_message(message.chat.id, message.text)
+
 """
+
 
 def get_page(week=''):
     if week:
@@ -29,17 +32,17 @@ def get_schedule(web_page, day):
         day = day[0]
     # Получаем таблицу с расписанием на день недели
     schedule_table = soup.find("table", attrs={"id": "1day"})
-    if day == '/понедельник' or day == '/воскресенье' or day == '/Понедельник' or day == '/Воскресенье':
+    if day == '/monday' or day == '/sunday' or day == '/Monday' or day == '/Sunday':
         schedule_table = soup.find("table", attrs={"id": "1day"})
-    elif day == '/вторник' or day == '/Вторник':
+    elif day == '/tuesday' or day == '/Tuesday':
         schedule_table = soup.find("table", attrs={"id": "2day"})
-    elif day == '/среда' or day == '/Среда':
+    elif day == '/wednesday' or day == '/Wednesday':
         schedule_table = soup.find("table", attrs={"id": "3day"})
-    elif day == '/четверг' or day == '/Четверг':
+    elif day == '/thursday' or day == '/Thursday':
         schedule_table = soup.find("table", attrs={"id": "4day"})
-    elif day == '/пятница' or day == '/Пятница':
+    elif day == '/friday' or day == '/Friday':
         schedule_table = soup.find("table", attrs={"id": "5day"})
-    elif day == '/суббота' or day == '/Суббота':
+    elif day == '/saturday' or day == '/Saturday':
         schedule_table = soup.find("table", attrs={"id": "6day"})
     # Время проведения занятий
     times_list = schedule_table.find_all("td", attrs={"class": "time"})
@@ -56,8 +59,8 @@ def get_schedule(web_page, day):
     return times_list, locations_list, lessons_list
 
 
-@bot.message_handler(commands=['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье',
-                               'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресеьне'])
+@bot.message_handler(commands=['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+                               'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
 def get_day(message):
     if len(message.text.split()) == 2:
         day, week = message.text.split()

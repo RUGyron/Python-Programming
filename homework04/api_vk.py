@@ -12,17 +12,15 @@ access_token = '3245beaa3245beaa3245beaa96321aacd8332453245beaa6ba82386c1441514b
 domain = "https://api.vk.com/method"
 
 
-def get(response, timeout=5, max_retries=5, backoff_factor=0.3):
+def get(response, timeout=5, max_retries=500, backoff_factor=0.3):
     delay = 0
     for i in range(max_retries):
         try:
-            query = response
-            return query
+            return requests.get(response)
         except:
-            pass
-        time.sleep(delay)
-        dalay = min(delay * backoff_factor, timeout)
-        delay += random.random()
+            time.sleep(delay)
+            dalay = min(delay * backoff_factor, timeout)
+            delay += random.random()
     raise ConnectionError("Error of connection")
 
 
@@ -32,8 +30,8 @@ def age_predict(user_id=60355185):
     friends = get_friends(user_id)
     bdate_list = []
     user_query = "https://api.vk.com/method/users.get?user_ids={0}&v=5.69".format(user_id)
-    user_response = '(' + get(requests.get(user_query)).json()['response'][0]['first_name'] +\
-                    ' ' + get(requests.get(user_query)).json()['response'][0]['last_name'] + ')'
+    user_response = '(' + get(user_query).json()['response'][0]['first_name'] +\
+                    ' ' + get(user_query).json()['response'][0]['last_name'] + ')'
     for i in friends:
         cnt = 0
         try:
@@ -68,7 +66,7 @@ def messages_get_history(user_idMsg=60355185, offset=0, count=20):
         'user_idMsg': user_idMsg
     }
     query = "{domain}/messages.getHistory?access_token={my_token}&user_id={user_idMsg}&v=5.53".format(**query_params)
-    response = get(requests.get(query))
+    response = get(query)
     plotly.tools.set_credentials_file(username='RUGyron', api_key=API_key)
     amount = response.json()['response']['count']
     count = amount
@@ -93,7 +91,7 @@ def messages_get_history(user_idMsg=60355185, offset=0, count=20):
         }
         query = "{domain}/messages.getHistory?access_token={my_token}&user_id={user_idMsg}&fields={" \
                 "fieldsMsg}&v=5.53&count={count}&offset={offset}&rev={rev}".format(**query_params)
-        messages = get(requests.get(query)).json()['response']['items']
+        messages = get(query).json()['response']['items']
         for i in range(count):
             try:
                 Msg.append((messages[i]['from_id'], messages[i]['from_id']))
@@ -115,7 +113,7 @@ def count_dates_from_messages(user_idMsg=60355185):
         'user_idMsg': user_idMsg
     }
     query = "{domain}/messages.getHistory?access_token={my_token}&user_id={user_idMsg}&v=5.53".format(**query_params)
-    response = get(requests.get(query))
+    response = get(query)
     plotly.tools.set_credentials_file(username='RUGyron', api_key=API_key)
     amount = response.json()['response']['count']
     count = amount
@@ -140,7 +138,7 @@ def count_dates_from_messages(user_idMsg=60355185):
         }
         query = "{domain}/messages.getHistory?access_token={my_token}&user_id={user_idMsg}&fields={" \
                 "fieldsMsg}&v=5.53&count={count}&offset={offset}&rev={rev}".format(**query_params)
-        response = get(requests.get(query))
+        response = get(query)
         messages = response.json()['response']['items']
         numb = str((offset/amount)*100)
         print(numb[:numb.index('.')+2], '%')
@@ -186,7 +184,7 @@ def get_friends(user_id):
     }
     query = "https://api.vk.com/method/friends.get?fields={fields}&access_token={access_token}&v=5.53&user_id={user_id}".format(
         **query_params)
-    response = get(requests.get(query))
+    response = get(query)
 
     try:
         friends = response.json()['response']['items']
@@ -195,7 +193,7 @@ def get_friends(user_id):
     bdate_list = []
     for i in friends:
         try:
-            time.sleep(0.0008)
+            time.sleep(0.0001)
             bdate_list.append([i['id'], i['last_name'], i['bdate']])
         except:
             try:
@@ -242,8 +240,8 @@ def get_network(user_id=60355185):
 
 
 if __name__ == '__main__':
-    print(age_predict(56200185))
+    print(age_predict(60355185))
     print('----------')
-    print(get_network(56200185))
+    print(get_network(60355185))
     print('----------')
-    print(plotly_messages_freq(56200185))
+    print(plotly_messages_freq(60355185))

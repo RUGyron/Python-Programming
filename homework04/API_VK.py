@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 
 
-def get_response(response, timeout=5, max_retries=5, backoff_factor=1.3):
+def get(response, timeout=5, max_retries=5, backoff_factor=0.3):
     delay = 0
     for i in range(max_retries):
         try:
@@ -22,7 +22,7 @@ def get_response(response, timeout=5, max_retries=5, backoff_factor=1.3):
     raise ConnectionResetError("Error")
 
 
-def getAge(user_id=60355185):
+def age_predict(user_id=60355185):
     assert isinstance(user_id, int), "user_id must be positive integer"
     assert user_id > 0, "user_id must be positive integer"
     domain = "https://api.vk.com/method"
@@ -33,23 +33,21 @@ def getAge(user_id=60355185):
         'user_id': user_id,
         'fields': 'bdate'
     }
-    query = "https://api.vk.com/method/friends.get?fields={fields}&access_token={access_token}&v=5.53&user_id={user_id}".format(**query_params)
-    response = get_response(requests.get(query))
-    friends = response.json()['response']['items']
+    friends = get_friends(user_id)
     bdate_list = []
     user_query = "https://api.vk.com/method/users.get?user_ids={0}&v=5.69".format(user_id)
-    user_response = '(' + get_response(requests.get(user_query)).json()['response'][0]['first_name'] +\
-                    ' ' + get_response(requests.get(user_query)).json()['response'][0]['last_name'] + ')'
+    user_response = '(' + get(requests.get(user_query)).json()['response'][0]['first_name'] +\
+                    ' ' + get(requests.get(user_query)).json()['response'][0]['last_name'] + ')'
     for i in friends:
         cnt = 0
         try:
-            if i['bdate']:
-                i['bdate'] = i['bdate'][len(i['bdate'])-4:]
-                for j in i['bdate']:
+            if i[2]:
+                i[2] = i[2][len(i[2])-4:]
+                for j in i[2]:
                     if j == '.':
                         cnt = 1
-                if cnt == 0 and len(i['bdate']) == 4:
-                    bdate_list.append([int(i['bdate'])])
+                if cnt == 0 and len(i[2]) == 4:
+                    bdate_list.append([int(i[2])])
         except:
             continue
     maxi = -1
@@ -62,11 +60,11 @@ def getAge(user_id=60355185):
     return 'ID = ' + str(user_id) + ' ' + user_response + ', ' + 'Predicted age: ' + str(2017 - maxi_i[0])
 
 
-def getMsg(user_idMsg=60355185):
+def messages_get_history(user_idMsg=60355185):
     assert isinstance(user_idMsg, int), "user_id must be positive integer"
     assert user_idMsg > 0, "user_id must be positive integer"
     domain = "https://api.vk.com/method"
-    my_token = "82ca0247466d9a3af2fcb21f115b9c4235dbccd2550ebc5dcd886d9ae4a43f464673bf7cca1b014785734"
+    my_token = "310c42af62ec66bb873920b64549068810a4f2704af03d40188e66bfd62945971202d8ef07fe1b71f5b44"
     rev = 1
     API_key = 'E1Jq5ZJhZI13KGonkkRa'
     query_params = {
@@ -75,7 +73,7 @@ def getMsg(user_idMsg=60355185):
         'user_idMsg': user_idMsg
     }
     query = "{domain}/messages.getHistory?access_token={my_token}&user_id={user_idMsg}&v=5.53".format(**query_params)
-    response = get_response(requests.get(query))
+    response = get(requests.get(query))
     plotly.tools.set_credentials_file(username='RUGyron', api_key=API_key)
     amount = response.json()['response']['count']
     count = amount
@@ -100,7 +98,7 @@ def getMsg(user_idMsg=60355185):
         }
         query = "{domain}/messages.getHistory?access_token={my_token}&user_id={user_idMsg}&fields={" \
                 "fieldsMsg}&v=5.53&count={count}&offset={offset}&rev={rev}".format(**query_params)
-        response = get_response(requests.get(query))
+        response = get(requests.get(query))
         messages = response.json()['response']['items']
         numb = str((offset/amount)*100)
         print(numb[:numb.index('.')+2], '%')
@@ -128,11 +126,10 @@ def getMsg(user_idMsg=60355185):
             cur = i
             cnt = 1
     Y.append(cnt)
-    data = [go.Scatter(x=X, y=Y)]
-    py.iplot(data)
-    return True
+    return [go.Scatter(x=X, y=Y)]
 
-def getFriends(user_id):
+
+def get_friends(user_id):
     assert isinstance(user_id, int), "user_id must be positive integer"
     assert user_id > 0, "user_id must be positive integer"
     domain = "https://api.vk.com/method"
@@ -145,7 +142,7 @@ def getFriends(user_id):
     }
     query = "https://api.vk.com/method/friends.get?fields={fields}&access_token={access_token}&v=5.53&user_id={user_id}".format(
         **query_params)
-    response = get_response(requests.get(query))
+    response = get(requests.get(query))
 
     try:
         friends = response.json()['response']['items']
@@ -155,25 +152,28 @@ def getFriends(user_id):
     for i in friends:
         try:
             time.sleep(0.0008)
-            bdate_list.append((i['id'], i['last_name']))
+            bdate_list.append([i['id'], i['last_name'], i['bdate']])
         except:
-            continue
+            try:
+                bdate_list.append([i['id'], i['last_name']])
+            except:
+                continue
     return bdate_list
 
 
-def getNetwork(user_id=60355185):
+def get_network(user_id=60355185):
     assert isinstance(user_id, int), "user_id must be positive integer"
     assert user_id > 0, "user_id must be positive integer"
-    vertices = [c[0] for c in getFriends(user_id)]
-    verticesN = [c[1] for c in getFriends(user_id)]
+    vertices = [c[0] for c in get_friends(user_id)]
+    verticesN = [c[1] for c in get_friends(user_id)]
     N = len(vertices)
     edges = []
     for elem in range(N):
         print(elem + 1, '/', len(vertices), verticesN[elem])
-        if getFriends(vertices[elem]) is False:
+        if get_friends(vertices[elem]) is False:
             continue
-        uFriends = [c[0] for c in getFriends(vertices[elem])]
-        uFriendsN = [c[1] for c in getFriends(vertices[elem])]
+        uFriends = [c[0] for c in get_friends(vertices[elem])]
+        uFriendsN = [c[1] for c in get_friends(vertices[elem])]
         for i in range(N):
             if vertices[i] in uFriends:
                 edges.append((elem, i))
@@ -194,11 +194,12 @@ def getNetwork(user_id=60355185):
 
     g.simplify(multiple=True, loops=True)
     igraph.plot(g, **visual_style)
+    return edges
 
 
 if __name__ == '__main__':
-    print(getAge())
+    print(age_predict(56200185))
     print('----------')
-    print(getNetwork())
+    print(get_network(56200185))
     print('----------')
-    print(getMsg())
+    print(messages_get_history(56200185))

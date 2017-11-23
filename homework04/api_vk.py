@@ -29,12 +29,6 @@ def get(response, timeout=5, max_retries=5, backoff_factor=0.3):
 def age_predict(user_id=60355185):
     assert isinstance(user_id, int), "user_id must be positive integer"
     assert user_id > 0, "user_id must be positive integer"
-    query_params = {
-        'domain': domain,
-        'access_token': access_token,
-        'user_id': user_id,
-        'fields': 'bdate'
-    }
     friends = get_friends(user_id)
     bdate_list = []
     user_query = "https://api.vk.com/method/users.get?user_ids={0}&v=5.69".format(user_id)

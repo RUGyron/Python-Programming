@@ -175,5 +175,8 @@ def get_next_lesson(message):
         bot.send_message(message.chat.id, 'Все пары на сегодня закончились')
 
 
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+while True:
+    try:
+      bot.polling(none_stop=True)
+    except:
+        time.sleep(5)

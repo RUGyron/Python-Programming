@@ -179,4 +179,4 @@ while True:
     try:
       bot.polling(none_stop=True)
     except:
-        time.sleep(5)
+        pass

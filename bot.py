@@ -1,7 +1,8 @@
-import config
+from cs102.homework05 import config
 import datetime
 import telebot
 import requests
+import time
 from bs4 import BeautifulSoup
 
 bot = telebot.TeleBot(config.token)
@@ -170,13 +171,15 @@ def get_next_lesson(message):
             bot.send_message(message.chat.id, resp, parse_mode='HTML')
             state = 1
             break
-            cnt +=1
+        cnt +=1
     if not state:
         bot.send_message(message.chat.id, 'Все пары на сегодня закончились')
 
 
+# if __name__ == '__main__':
+#     bot.polling(none_stop=True)
 while True:
     try:
       bot.polling(none_stop=True)
     except:
-        pass
+        time.sleep(5)

@@ -1,4 +1,4 @@
-from cs102.homework05 import config
+import config
 import datetime
 import telebot
 import requests

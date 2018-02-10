@@ -4,13 +4,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from bs4 import BeautifulSoup
 import requests as r
-import html5lib
 from bottle import route, run, template, request, redirect
 
+# Создадим БД и сессию для обращения к ней
 Base = declarative_base()
 engine = create_engine("sqlite:///news.db")
 session = sessionmaker(bind=engine)
 
+# Создадим столбцы таблицы в БД и зададим их тип
 class News(Base):
     __tablename__ = "news"
     id = Column(Integer, primary_key = True)
@@ -23,7 +24,7 @@ class News(Base):
 
 Base.metadata.create_all(bind=engine)
 
-
+# Передадим все неразмеченные новости из БД в template, к которому можно обратится по ссылке /news
 @route('/news')
 def news_list():
     s = session()
@@ -31,7 +32,7 @@ def news_list():
     rows.reverse()
     return template('news_template', rows=rows, lenth=len(rows))
 
-
+# Запушим все спаршенные новости с сайта на наш сайт localhost через сессию и закоммитим
 def add_news(instance):
     s = session()
     news = News(title=instance['title'],
@@ -43,6 +44,7 @@ def add_news(instance):
     s.commit()
     return None
 
+# Создадим функцию, передающую словарь из немаркерованных новостей из БД
 def DBnews():
     s = session()
     rows = s.query(News).filter(News.label == None).all()
@@ -53,6 +55,7 @@ def DBnews():
              'likes': i.likes,
              'label': i.label}for i in rows]
 
+# Создадим функцию, передающую словарь из маркерованных новостей из БД
 def DBnewsMarked():
     s = session()
     rows = s.query(News).filter(News.label != None).all()
@@ -63,6 +66,7 @@ def DBnewsMarked():
              'likes': i.likes,
              'label': i.label}for i in rows]
 
+# Парсим новостную ленту с 1 страницы hackernews.com
 def extract_news(url):
     # Спарсим целиком страницу и преобразуем ее с помощью модуля BS4 с возможностью искать и обращаться к тэгам
     web_page = r.get(url).text
@@ -100,12 +104,13 @@ def extract_news(url):
                 cnt += 1
             except:
                 break
+
     for i in range(len(news_list)):
         if news_list[i]['comments'] != 'discuss':
             news_list[i]['comments'], _ = news_list[i]['comments'].split('\xa0')
     return news_list
 
-
+# Переход на следующую страницу
 def extract_next_page(url):
     # Спарсим целиком страницу и преобразуем ее с помощью модуля BS4 с возможностью искать и обращаться к тэгам
     web_page = r.get(url).text
@@ -118,6 +123,7 @@ def extract_next_page(url):
     except:
         return None
 
+# Парсим все новости с n страниц новостного сайта
 def get_news(url, num_pages=1):
     # Создадим пустой список для хранения новостной ленты
     news_list = []
@@ -134,6 +140,7 @@ def get_news(url, num_pages=1):
             break
     return news_list
 
+# Пополним новостную ленту нашего сайта свежими новостями первоисточника
 @route('/update_news')
 def update_news():
     news_list = get_news('https://news.ycombinator.com/newest')
@@ -148,7 +155,7 @@ def update_news():
             add_news(i)
     redirect('/news')
 
-
+# Добавим определенную метку интересности выбранной новости
 @route('/add_label/')
 def add_label(id=1, label='active'):
     id, label = request.query.id, request.query.label
@@ -158,7 +165,7 @@ def add_label(id=1, label='active'):
     s.commit()
     redirect('/news')
 
-
+# Необязательная функция
 def add_unread_news(url, num_pages):
     news_list = get_news(url, num_pages)
     s = session()
@@ -170,8 +177,5 @@ def add_unread_news(url, num_pages):
         if i['title'] not in bd_title_list:
             add_news(i)
 
-
 if __name__ == '__main__':
-    # add_unread_news('https://news.ycombinator.com/newest', 34)
-    # update_news('https://news.ycombinator.com/newest')
     run(host='localhost', port=8080)

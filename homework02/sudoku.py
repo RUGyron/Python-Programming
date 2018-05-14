@@ -1,17 +1,17 @@
-from pprint import pprint as pp
 import random
+from pprint import pprint as pp
 from collections import Counter
 
 
 def read_sudoku(filename):
-    """ Ïðî÷èòàòü Ñóäîêó èç óêàçàííîãî ôàéëà """
+    """ ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð¡ÑƒÐ´Ð¾ÐºÑƒ Ð¸Ð· ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð³Ð¾ Ñ„Ð°Ð¹Ð»Ð° """
     digits = [c for c in open(filename).read() if c in '123456789.']
     grid = group(digits, 9)
     return grid
 
 
 def display(values):
-    """Âûâîä Ñóäîêó """
+    """Ð’Ñ‹Ð²Ð¾Ð´ Ð¡ÑƒÐ´Ð¾ÐºÑƒ """
     width = 2
     line = '+'.join(['-' * (width * 3)] * 3)
     for row in range(9):
@@ -24,7 +24,7 @@ def display(values):
 
 def group(values, n):
     """
-    Ñãðóïïèðîâàòü çíà÷åíèÿ values â ñïèñîê, ñîñòîÿùèé èç ñïèñêîâ ïî n ýëåìåíòîâ
+    Ð¡Ð³Ñ€ÑƒÐ¿Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ values Ð² ÑÐ¿Ð¸ÑÐ¾Ðº, ÑÐ¾ÑÑ‚Ð¾ÑÑ‰Ð¸Ð¹ Ð¸Ð· ÑÐ¿Ð¸ÑÐºÐ¾Ð² Ð¿Ð¾ n ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð²
     >>> group([1,2,3,4], 2)
     [[1, 2], [3, 4]]
     >>> group([1,2,3,4,5,6,7,8,9], 3)
@@ -34,7 +34,7 @@ def group(values, n):
 
 
 def get_row(values, pos):
-    """ Âîçâðàùàåò âñå çíà÷åíèÿ äëÿ íîìåðà ñòðîêè, óêàçàííîé â pos
+    """ Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð²ÑÐµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð´Ð»Ñ Ð½Ð¾Ð¼ÐµÑ€Ð° ÑÑ‚Ñ€Ð¾ÐºÐ¸, ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð¹ Ð² pos
     >>> get_row([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']], (0, 0))
     ['1', '2', '.']
     >>> get_row([['1', '2', '3'], ['4', '.', '6'], ['7', '8', '9']], (1, 0))
@@ -46,7 +46,7 @@ def get_row(values, pos):
 
 
 def get_col(values, pos):
-    """ Âîçâðàùàåò âñå çíà÷åíèÿ äëÿ íîìåðà ñòîëáöà, óêàçàííîãî â pos
+    """ Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð²ÑÐµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð´Ð»Ñ Ð½Ð¾Ð¼ÐµÑ€Ð° ÑÑ‚Ð¾Ð»Ð±Ñ†Ð°, ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð³Ð¾ Ð² pos
     >>> get_col([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']], (0, 0))
     ['1', '4', '7']
     >>> get_col([['1', '2', '3'], ['4', '.', '6'], ['7', '8', '9']], (0, 1))
@@ -59,20 +59,20 @@ def get_col(values, pos):
 
 def get_block(values, pos):
 
-    """ Âîçâðàùàåò âñå çíà÷åíèÿ èç òîãî êâàäðàòà, â êîòîðûé ïîïàäàåò
-    ïîçèöèÿ pos """
-    """ Ñ÷åò pos âåäåòñÿ ñ íóëÿ!!! (pos = x,y â ñåòêå) """
+    """ Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð²ÑÐµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð¸Ð· Ñ‚Ð¾Ð³Ð¾ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°, Ð² ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð¿Ð¾Ð¿Ð°Ð´Ð°ÐµÑ‚
+    Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ñ pos """
+    """ Ð¡Ñ‡ÐµÑ‚ pos Ð²ÐµÐ´ÐµÑ‚ÑÑ Ñ Ð½ÑƒÐ»Ñ!!! (pos = x,y Ð² ÑÐµÑ‚ÐºÐµ) """
 
     """ --------------------- """
-    """ öèêë äëÿ ãðóïïèðîâêè ýë-îâ ïî 3 âíóòðè ñåòêè (ïðè óñëîâèè,
-    åñëè ýë-òû íå ñãðóïïèðîâàíû) """
+    """ Ñ†Ð¸ÐºÐ» Ð´Ð»Ñ Ð³Ñ€ÑƒÐ¿Ð¿Ð¸Ñ€Ð¾Ð²ÐºÐ¸ ÑÐ»-Ð¾Ð² Ð¿Ð¾ 3 Ð²Ð½ÑƒÑ‚Ñ€Ð¸ ÑÐµÑ‚ÐºÐ¸ (Ð¿Ñ€Ð¸ ÑƒÑÐ»Ð¾Ð²Ð¸Ð¸,
+    ÐµÑÐ»Ð¸ ÑÐ»-Ñ‚Ñ‹ Ð½Ðµ ÑÐ³Ñ€ÑƒÐ¿Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ð½Ñ‹) """
     r = 3 * (pos[0] // 3)
     c = 3 * (pos[1] // 3)
     return [values[r+i][c+j] for i in range(3) for j in range(3)]
 
 
 def find_empty_positions(grid):
-    """ Íàéòè ïåðâóþ ñâîáîäíóþ ïîçèöèþ â ïàçëå
+    """ ÐÐ°Ð¹Ñ‚Ð¸ Ð¿ÐµÑ€Ð²ÑƒÑŽ ÑÐ²Ð¾Ð±Ð¾Ð´Ð½ÑƒÑŽ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ Ð² Ð¿Ð°Ð·Ð»Ðµ
     >>> find_empty_positions([['1', '2', '.'], +\
     ['4', '5', '6'], ['7', '8', '9']])
     (0, 2)
@@ -81,7 +81,7 @@ def find_empty_positions(grid):
     (1, 1)
     >>> find_empty_positions([['1', '2', '3'], +\
     ['4', '5', '6'], ['.', '8', '9']])
-    (2, 0)
+    (2, 0) 
     """
     for i in range(len(grid)):
         for j in range(len(grid)):
@@ -91,23 +91,19 @@ def find_empty_positions(grid):
 
 
 def find_possible_values(grid, pos):
-    """ Âåðíóòü âñå âîçìîæíûå çíà÷åíèÿ äëÿ óêàçàííîé ïîçèöèè """
-    var = set('123456789')
-    row = set(get_row(grid, pos))
-    col = set(get_col(grid, pos))
-    values_in_block = set(get_block(grid, pos))
-    return var - set.union(values_in_block, set.union(row, col))
+    """ Ð’ÐµÑ€Ð½ÑƒÑ‚ÑŒ Ð²ÑÐµ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð´Ð»Ñ ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð¹ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ð¸ """
+    return set('123456789') - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))    
 
 
 def solve(grid):
-    """ Ðåøåíèå ïàçëà, çàäàííîãî â grid """
-    """ Êàê ðåøàòü Ñóäîêó?
-        1. Íàéòè ñâîáîäíóþ ïîçèöèþ
-        2. Íàéòè âñå âîçìîæíûå çíà÷åíèÿ, êîòîðûå ìîãóò
-        íàõîäèòüñÿ íà ýòîé ïîçèöèè
-        3. Äëÿ êàæäîãî âîçìîæíîãî çíà÷åíèÿ:
-            3.1. Ïîìåñòèòü ýòî çíà÷åíèå íà ýòó ïîçèöèþ
-            3.2. Ïðîäîëæèòü ðåøàòü îñòàâøóþñÿ ÷àñòü ïàçëà
+    """ Ð ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ð°Ð·Ð»Ð°, Ð·Ð°Ð´Ð°Ð½Ð½Ð¾Ð³Ð¾ Ð² grid """
+    """ ÐšÐ°Ðº Ñ€ÐµÑˆÐ°Ñ‚ÑŒ Ð¡ÑƒÐ´Ð¾ÐºÑƒ?
+        1. ÐÐ°Ð¹Ñ‚Ð¸ ÑÐ²Ð¾Ð±Ð¾Ð´Ð½ÑƒÑŽ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ
+        2. ÐÐ°Ð¹Ñ‚Ð¸ Ð²ÑÐµ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð¼Ð¾Ð³ÑƒÑ‚
+        Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒÑÑ Ð½Ð° ÑÑ‚Ð¾Ð¹ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ð¸
+        3. Ð”Ð»Ñ ÐºÐ°Ð¶Ð´Ð¾Ð³Ð¾ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾Ð³Ð¾ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ:
+            3.1. ÐŸÐ¾Ð¼ÐµÑÑ‚Ð¸Ñ‚ÑŒ ÑÑ‚Ð¾ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð½Ð° ÑÑ‚Ñƒ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ
+            3.2. ÐŸÑ€Ð¾Ð´Ð¾Ð»Ð¶Ð¸Ñ‚ÑŒ Ñ€ÐµÑˆÐ°Ñ‚ÑŒ Ð¾ÑÑ‚Ð°Ð²ÑˆÑƒÑŽÑÑ Ñ‡Ð°ÑÑ‚ÑŒ Ð¿Ð°Ð·Ð»Ð°
     """
     pos = find_empty_positions(grid)
     if pos == -1:
@@ -125,29 +121,29 @@ def solve(grid):
 
 
 def check_solution(solution):
-    """ Åñëè ðåøåíèå solution âåðíî, òî âåðíóòü True,
-    â ïðîòèâíîì ñëó÷àå False """
+    """ Ð•ÑÐ»Ð¸ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ solution Ð²ÐµÑ€Ð½Ð¾, Ñ‚Ð¾ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ True,
+    Ð² Ð¿Ñ€Ð¾Ñ‚Ð¸Ð²Ð½Ð¾Ð¼ ÑÐ»ÑƒÑ‡Ð°Ðµ False """
     for i in range(9):
-        var1 = set('123456789')
-        var2 = set('123456789')
-        var3 = set('123456789')
-        row = set(get_row(solution, (i, 0)))
-        col = set(get_col(solution, (0, i)))
-        var1 -= row
-        var2 -= col
-        if var1 and var2 != set():
+        row_values = set('123456789')
+        col_values = set('123456789')
+        block_values = set('123456789')
+        row_solution_values = set(get_row(solution, (i, 0)))
+        col_solution_values = set(get_col(solution, (0, i)))
+        row_values -= row_solution_values
+        col_values -= col_solution_values
+        if row_values or col_values:
             return False
     for i in range(3):
         for j in range(3):
-            block = set(get_block(solution, (i, j)))
-            var3 -= block
-            if var3 != set():
+            block_solution_values = set(get_block(solution, (i, j)))
+            block_values -= block_solution_values
+            if block_values != set():
                 return False
     return True
 
 
 def generate_sudoku(N):
-    """ Ãåíåðàöèÿ ñóäîêó çàïîëíåííîãî íà N ýëåìåíòîâ
+    """ Ð“ÐµÐ½ÐµÑ€Ð°Ñ†Ð¸Ñ ÑÑƒÐ´Ð¾ÐºÑƒ Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð½Ð° N ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð²
         >>> grid = generate_sudoku(40)
         >>> sum(1 for row in grid for e in row if e == '.')
         41

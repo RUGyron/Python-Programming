@@ -9,7 +9,7 @@
 * Linux Servers Setup
 
 #### This is the branch of my works (Completed works)
-* Skype: rugyron
-* Telegram: @rugyron
-* VK: rugyron
-* e-mail: pivosh098@gmail.com
+* <i>Skype: rugyron<i>
+* <i>Telegram: @rugyron<i>
+* <i>VK: rugyron<i>
+* <i>e-mail: pivosh098@gmail.com<i>
